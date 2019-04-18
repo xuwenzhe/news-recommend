@@ -5,6 +5,7 @@ import React from 'react'
 
 class NewsCard extends React.Component {
   redirectToUrl(url, event) {
+    // default: redirecting at the current page
     event.preventDefault();
     this.sendClickLog();
     window.open(url, '_blank');

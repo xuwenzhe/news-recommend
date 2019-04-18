@@ -1,0 +1,4 @@
+{
+  "mongoDbUri": "mongodb+srv://test:test@news-recommend-9itft.mongodb.net/test?retryWrites=true",
+  "jwtSecret": "a secret phrase!!"
+}
