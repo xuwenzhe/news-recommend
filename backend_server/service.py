@@ -6,8 +6,8 @@ import json
 from bson.json_util import dumps
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 
-# import util package in parent dir
-sys.path.append(os.path.join(os.path.dirname(__file__), 'utils'))
+# import common package in parent dir
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 import mongodb_client # pylint: disable=import-error, wrong-import-position
 
