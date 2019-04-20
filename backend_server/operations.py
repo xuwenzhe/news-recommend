@@ -12,7 +12,7 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 import mongodb_client
-
+import news_recommendation_service_client
 from cloudAMQP_client import CloudAMQPClient
 
 LOG_CLICKS_TASK_QUEUE_URL = "amqp://njghtiov:KMxNWfvqe_QxEiaFk26wnKytR2miTKoq@wombat.rmq.cloudamqp.com/njghtiov"
@@ -41,6 +41,8 @@ def getOneNews():
 
 def getNewsSummariesForUser(user_id, page_num):
     page_num = int(page_num)
+    if page_num < 0:
+        return []
     begin_index = (page_num - 1) * NEWS_LIST_BATCH_SIZE
     end_index = page_num * NEWS_LIST_BATCH_SIZE
 
@@ -67,17 +69,18 @@ def getNewsSummariesForUser(user_id, page_num):
         sliced_news = total_news[begin_index:end_index]
 
     # Get preference for the user
-    # preference = news_recommendation_service_client.getPreferenceForUser(user_id)
-    # topPreference = None
+    # TODO: use perference to customize returned news list
+    preference = news_recommendation_service_client.getPreferenceForUser(user_id)
+    topPreference = None
 
-    # if preference is not None and len(preference) > 0:
-    #     topPreference = preference[0]
+    if preference is not None and len(preference) > 0:
+        topPreference = preference[0]
 
     for news in sliced_news:
         # Remove text field to save bandwidth.
         del news['text']
-        # if news['class'] == topPreference:
-        #     news['reason'] = 'Recommend'
+        if 'class' in news and news['class'] == topPreference:
+            news['reason'] = 'Recommend'
         if news['publishedAt'].date() == datetime.today().date():
             news['time'] = 'today'
     return json.loads(dumps(sliced_news))
@@ -85,17 +88,5 @@ def getNewsSummariesForUser(user_id, page_num):
 def log_news_click_for_user(user_id, news_id):
     message = {'userId': user_id, 'newsId': news_id, 'timestamp': str(datetime.utcnow())}
     cloudAMQP_client.sendMessage(message)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
