@@ -8,7 +8,7 @@ import _ from 'lodash';
 class NewsPanel extends React.Component {
   constructor() {
     super();
-    this.state = {news: null};
+    this.state = {news: null, pageNum: 1, loadedAll: false};
   } 
 
   // componentDidMount() gets called automatically after constructor finishes.
@@ -28,21 +28,35 @@ class NewsPanel extends React.Component {
     }
   }
   loadMoreNews() {
+    console.log('Actually triggered loading more news.')
+    if (this.state.loadedAll == true) {
+      return;
+    }
+
     // refer to newsAPI at web_server/server/routes/news.js
-    const news_url = 'http://' + window.location.hostname + ':3000' + '/news';
-    const request = new Request(news_url, {
+    const news_url = 'http://' + window.location.hostname
+                   + ':3000/news/userId=' + Auth.getEmail()
+                   + "&pageNum=" + this.state.pageNum;
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
+    const request = new Request(encodeURI(news_url), {
       method: 'GET',
       headers: {
         'Authorization': 'bearer ' + Auth.getToken(),
       },
     });
+
     fetch(request)
       .then(res => res.json())
       .then(news_list => {
         // render-cycle explanation
         // https://stackoverflow.com/a/24719289
+        if (!news_list || news_list.length == 0) {
+          this.setState({loadedAll:true});
+        }
         this.setState({
           news: this.state.news ? this.state.news.concat(news_list) : news_list,
+          pageNum: this.state.pageNum + 1
         });
       })
   }

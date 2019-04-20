@@ -3,6 +3,7 @@ import logging
 import os
 import sys
 import json
+import operations
 from bson.json_util import dumps
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 
@@ -27,13 +28,22 @@ def add(num1, num2):
 
 def get_one_news():
     """ Test method to get one news. """
-    res = mongodb_client.get_db()['news'].find_one()
-    return json.loads(dumps(res))
+    print("get_one_news is called")
+    return operations.getOneNews()
 
+def get_news_summaries_for_user(user_id, page_num):
+    print("get_news_summaries_for_user is called with %s and %s" %(user_id, page_num))
+    return operations.getNewsSummariesForUser(user_id, page_num)
 
-SERVER = SimpleJSONRPCServer((SERVER_HOST, SERVER_PORT))
-SERVER.register_function(add, 'add')
-SERVER.register_function(get_one_news, 'getOneNews')
+def log_news_click_for_user(user_id, news_id):
+    print("log_news_click_for_user is called with %s and %s" %(user_id, news_id))
+    return operations.log_news_click_for_user(user_id, news_id)
+
+RPC_SERVER = SimpleJSONRPCServer((SERVER_HOST, SERVER_PORT))
+RPC_SERVER.register_function(add, 'add')
+RPC_SERVER.register_function(get_one_news, 'getOneNews')
+RPC_SERVER.register_function(get_news_summaries_for_user, 'getNewsSummariesForUser')
+RPC_SERVER.register_function(log_news_click_for_user, 'logNewsClickForUser')
 
 LOGGER.info('Starting RPC server on %s:%d', SERVER_HOST, SERVER_PORT)
-SERVER.serve_forever()
+RPC_SERVER.serve_forever()
