@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 import news_api_client
 from cloudAMQP_client import CloudAMQPClient
 
-SLEEP_TIME_IN_SECONDS = 60
+SLEEP_TIME_IN_SECONDS = 600
 NEWS_TIME_OUT_IN_SECONDS = 3600 * 24 * 3 # redis-check window
 
 REDIS_HOST = 'localhost'
@@ -19,7 +19,17 @@ SCRAPE_NEWS_TASK_QUEUE_URL = "amqp://xkbzolzd:4C-hGDUATyebdpj6JR_zrlJu7UHLja0r@w
 SCRAPE_NEWS_TASK_QUEUE_NAME = "tap-news-scrape-news-task-queue"
 
 NEWS_SOURCES = [
-    'cnn'
+    'bbc-news',
+    'bbc-sport',
+    'bloomberg',
+    'cnn',
+    'entertainment-weekly',
+    'espn',
+    'ign',
+    'techcrunch',
+    'the-new-york-times',
+    'the-wall-street-journal',
+    'the-washington-post'
 ]
 
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT)

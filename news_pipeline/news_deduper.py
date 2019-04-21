@@ -10,6 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 import mongodb_client
 from cloudAMQP_client import CloudAMQPClient
+import classify_news_service_client
 
 DEDUPE_NEWS_TASK_QUEUE_URL = "amqp://axfuxysf:v8X871ClpaBmFlor1T4rTwVSBMfj7GUI@wombat.rmq.cloudamqp.com/axfuxysf"
 DEDUPE_NEWS_TASK_QUEUE_NAME = "tap-news-dedupe-news-task-queue"
@@ -55,9 +56,12 @@ def handle_message(msg):
                 print("Duplicated news. Ignore.")
                 return
     msg['publishedAt'] = parser.parse(msg['publishedAt'])
+    # request classify_news_service_client for news_class
+    msg['class'] = classify_news_service_client.predict_news_class(msg['text'])
+    print(msg['class'])
     # http://api.mongodb.com/python/current/api/pymongo/collection.html
     replace_one_result = db[NEWS_TABLE_NAME].replace_one({'digest': msg['digest']}, msg, upsert=True) # update and insert
-    print("Local mongoDB Modified Count: ", replace_one_result.modified_count)
+    # print("Local mongoDB Modified Count: ", replace_one_result.modified_count)
     # https://stackoverflow.com/a/49674531
     count_result = db[NEWS_TABLE_NAME].count()
     print("Local mongoDB Total Count: ", count_result)

@@ -8,11 +8,12 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 import mongodb_client
+import news_classes
 
 PREFERENCE_MODEL_TABLE_NAME = "user_preference_model"
 NEWS_TABLE_NAME = "news"
 
-NUM_OF_CLASSES = 8
+NUM_OF_CLASSES = len(news_classes.classes)
 
 # Start MongoDB before running following tests.
 def test_basic():

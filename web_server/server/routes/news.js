@@ -14,13 +14,14 @@ router.get('/userId=:userId&pageNum=:pageNum', function(req, res, next) {
   });
 });
 
-/* Log news click. */
-router.get('/userId=:userId&newsId=:newsId', function(req, res, next) {
+/* Log news click. Note: not get! */
+router.post('/userId=:userId&newsId=:newsId', function(req, res, next) {
   console.log('Logging news click...');
   userId = req.params['userId'];
   newsId = req.params['newsId'];
 
   rpc_client.logNewsClickForUser(userId, newsId);
+  print('test news routing')
   res.status(200);
 });
 

@@ -1,7 +1,7 @@
 import os
 import sys
 
-# from newspaper import Article
+from newspaper import Article
 
 # import common package in parent directory
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
@@ -27,14 +27,15 @@ def handle_message(msg):
         return
 
     text = None
-    # article = Article(msg['url'])
-    # article.download()
-    # article.parse()
-    # msg['text'] = article.text
 
-    if msg['source'] == 'cnn':
-        text = cnn_news_scraper.extract_news(msg['url'])
-    msg['text'] = text
+    article = Article(msg['url'])
+    article.download()
+    article.parse()
+    msg['text'] = article.text
+
+    # if msg['source'] == 'cnn':
+    #     text = cnn_news_scraper.extract_news(msg['url'])
+    # msg['text'] = text
     dedupe_news_queue_client.sendMessage(msg)
 
 while True:

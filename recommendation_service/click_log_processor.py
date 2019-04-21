@@ -12,19 +12,18 @@ The result of this is that the nth most recent selection will have a weight of
 selection would only have half the weight of the most recent. Increasing epsilon
 would bias towards more recent results more.
 '''
-
-import news_classes
 import os
 import sys
 
 # import common package in parent directory
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
+import news_classes
 
 import mongodb_client
 from cloudAMQP_client import CloudAMQPClient
 
 # Don't modify this value unless you know what you are doing.
-NUM_OF_CLASSES = 8
+NUM_OF_CLASSES = len(news_classes.classes)
 INITIAL_P = 1.0 / NUM_OF_CLASSES
 ALPHA = 0.1
 
