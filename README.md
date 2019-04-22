@@ -47,7 +47,9 @@ The major components are:
 5. [Data Pipeline](./build_guide/part5-data-pipeline.md)
 6. [Pagination, Click log collector](./build_guide/part6-pagination-click_log_collector.md)
 7. [Recommendation](./build_guide/part7-recommendation.md)
-8. [Classifier](./build_guide/classifier.md)
+8. [Classifier](./build_guide/part8-classifier.md)
+
+#### Author: Wenzhe Xu
 
 ![app-screenshot](./readme_figs/react-screenshot.png)
 
